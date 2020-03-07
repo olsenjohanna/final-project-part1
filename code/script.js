@@ -1,5 +1,5 @@
 // API URL's
-const fetchAllChannels = `http://api.sr.se/api/v2/channels?format=json`
+const fetchAllChannels = `https://api.sr.se/api/v2/channels?format=json`
 
 
 // Channel ID's p1 = 132, p2 = 163, p3 = 164
@@ -48,7 +48,7 @@ fetch(fetchAllChannels)
 
 
       // Fetch program that sends right now for each channel
-      const fetchProgramRightNow = `http://api.sr.se/api/v2/scheduledepisodes/rightnow?format=json&channelid=${channelId}`
+      const fetchProgramRightNow = `https://api.sr.se/api/v2/scheduledepisodes/rightnow?format=json&channelid=${channelId}`
 
       const sendRightNow = (channelId) => {
         fetch(fetchProgramRightNow)
