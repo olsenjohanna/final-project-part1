@@ -1,14 +1,12 @@
 // API URL's
 const fetchAllChannels = `https://api.sr.se/api/v2/channels?format=json`
 
-
 // Channel ID's p1 = 132, p2 = 163, p3 = 164
 
 // DOM Selectors all channels
-const channelContainer = document.getElementById('channelContainer')
-const channelImg = document.getElementById('channelImg')
+const channelInfo = document.getElementById('channelInfo')
 const channelDescription = document.getElementById('channelDescription')
-const channelProgramNow = document.getElementById('channelProgramNow')
+const scheduleInfo = document.getElementById('scheduleInfo')
 const channelAudio = document.getElementById('channelAudio')
 const channelSchedule = document.getElementById('channelSchedule')
 
@@ -24,12 +22,10 @@ fetch(fetchAllChannels)
   })
   .then((channelArray) => {
 
-    console.log(channelArray)
-    console.log(channelArray.channels)
-
     //Filter array to only show P1, P2 and P3
     const filteredChannels = channelArray.channels.filter(item => item.id < 200)
     console.log(filteredChannels)
+
 
     filteredChannels.forEach((channel) => {
 
@@ -37,13 +33,17 @@ fetch(fetchAllChannels)
       const description = channel.tagline
       const image = channel.image
       const audio = channel.liveaudio.url
-
-      console.log(channel.liveaudio.url)
+      console.log(channel.color)
 
 
       // Print information to DOM
-      channelImg.innerHTML += `<img src="${image}" alt="">`
-      //channelDescription.innerHTML += `<p>${description}</p>`
+      channelInfo.innerHTML +=
+        `
+        <div class="channel-image" id="channelImg">
+        <img src="${image}" alt="">
+        </div>
+        `
+
 
 
 
@@ -56,19 +56,24 @@ fetch(fetchAllChannels)
             return response.json()
           })
           .then((rightNowArray) => {
-            console.log(rightNowArray)
+            //console.log(rightNowArray)
 
             const titleNow = rightNowArray.channel.currentscheduledepisode.title
             const descrNow = rightNowArray.channel.currentscheduledepisode.description
 
-            channelProgramNow.innerHTML +=
-              `<p>${titleNow} <br>
-              <audio src="${audio}" controls></audio>
-              </p>
-           `
+            scheduleInfo.innerHTML +=
+              `<div class="container">
+              <div class="channel-program-now" id="channelProgramNow">
+              <p>Spelas nu: ${titleNow} <br>
+              <audio src="${audio}" controls></audio></p>
+              </div>
+              <div class="channel-schedule" id="channelSchedule">
+              <a href="">Se tablå >></a>
+              </div>
+              </div>
+              `
+            //channelAudio.innerHTML += `<audio src="${audio}" controls></audio>`
 
-            console.log(rightNowArray.channel.currentscheduledepisode.title)
-            console.log(rightNowArray.channel.currentscheduledepisode.description)
           })
       }
 
@@ -78,4 +83,76 @@ fetch(fetchAllChannels)
     });
 
     // End tag fetchAllChannels
+  })
+
+
+// Function for get program schedule 
+
+// Get program schedule for different dates
+
+// Get todays date
+const today = new Date()
+const day = today.getDate()
+const month = today.getMonth() + 1
+const yyyy = today.getFullYear()
+console.log(today)
+
+console.log(yyyy)
+
+if (month < 10) {
+  const mm = '0' + month
+  console.log(mm)
+}
+
+if (day < 10) {
+  const dd = '0' + day
+  console.log(dd)
+}
+
+//const todaysDate = `${yyyy}-${mm}-${dd}`
+//console.log(todaysDate)
+
+
+// Get tomorrows date
+const tomorrow = new Date(today)
+tomorrow.setDate(today.getDate() + 1)
+console.log(tomorrow)
+
+const tomorrowDay = tomorrow.getDate()
+const tomorrowMonth = tomorrow.getMonth() + 1
+const tomorrowyyyy = tomorrow.getFullYear()
+console.log(tomorrowDay)
+console.log(tomorrowMonth)
+console.log(tomorrowyyyy)
+
+// Get date for second next day
+const secondNextDay = new Date(tomorrow)
+secondNextDay.setDate(tomorrow.getDate() + 1)
+console.log(secondNextDay)
+
+// API url for 
+const fetchChannelSchedule = `http://api.sr.se/api/v2/scheduledepisodes?format=json&channelid=164&date=2020-03-09`
+// http://api.sr.se/api/v2/scheduledepisodes?format=json&channelid=${channelId}&date=${today}
+
+
+fetch(fetchChannelSchedule)
+  .then((response) => {
+    return response.json()
+  })
+  .then((schedules) => {
+
+    const scheduleArray = schedules.schedule
+    console.log(scheduleArray)
+
+    scheduleArray.forEach((program) => {
+      console.log(program.title)
+      console.log(program.program.name)
+      console.log(program.starttimeutc)
+
+      //console.log(date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }))
+    })
+
+
+
+
   })
