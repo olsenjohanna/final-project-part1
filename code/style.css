@@ -66,7 +66,7 @@ body {
   background-color: #F3F3F3;
   box-shadow: -1px 0px 18px 0px rgba(0,0,0,0.73);
   margin: 20px;
-  height: 300px;
+  height: auto;
 }
 
 .heading {
@@ -101,6 +101,27 @@ body {
 .tab button.active {
   background-color: #ccc;
 }
+
+.episode {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  height: 50px;
+  padding: 10px;
+}
+
+.episode p {
+  margin-right: 20px;
+}
+
+
+.episode img {
+  object-fit: cover;
+  height: 30px;
+  width: 30px;
+  margin-right: 10px;
+}
+
 
 footer {
   text-align: center;

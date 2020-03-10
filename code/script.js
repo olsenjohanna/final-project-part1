@@ -9,10 +9,12 @@ const channelDescription = document.getElementById('channelDescription')
 const scheduleInfo = document.getElementById('scheduleInfo')
 const channelAudio = document.getElementById('channelAudio')
 const channelSchedule = document.getElementById('channelSchedule')
+const seeChannelSchedule = document.getElementById('seeChannelSchedule')
 
 
 // DOM Selectors schedule for specific channel
 const scheduleContainer = document.getElementById('scheduleContainer')
+const displaySchedule = document.getElementById('displaySchedule')
 
 
 
@@ -68,7 +70,7 @@ fetch(fetchAllChannels)
               <audio src="${audio}" controls></audio></p>
               </div>
               <div class="channel-schedule" id="channelSchedule">
-              <a href="">Se tablå >></a>
+              <a href="" id="seeChannelSchedule" value=${channelId}>Se tablå >></a>
               </div>
               </div>
               `
@@ -91,13 +93,17 @@ fetch(fetchAllChannels)
 // Get program schedule for different dates
 
 // Get todays date
+
+
+
 const today = new Date()
-const day = today.getDate()
 const month = today.getMonth() + 1
+const day = today.getDate()
 const yyyy = today.getFullYear()
 console.log(today)
 
 console.log(yyyy)
+
 
 if (month < 10) {
   const mm = '0' + month
@@ -111,6 +117,7 @@ if (day < 10) {
 
 //const todaysDate = `${yyyy}-${mm}-${dd}`
 //console.log(todaysDate)
+
 
 
 // Get tomorrows date
@@ -130,8 +137,15 @@ const secondNextDay = new Date(tomorrow)
 secondNextDay.setDate(tomorrow.getDate() + 1)
 console.log(secondNextDay)
 
+
+
+//Function for todays schedule
+
+//const seeTodaysSchedule = () => {
+
+
 // API url for 
-const fetchChannelSchedule = `http://api.sr.se/api/v2/scheduledepisodes?format=json&channelid=164&date=2020-03-09`
+const fetchChannelSchedule = `http://api.sr.se/api/v2/scheduledepisodes?format=json&channelid=132`
 // http://api.sr.se/api/v2/scheduledepisodes?format=json&channelid=${channelId}&date=${today}
 
 
@@ -145,14 +159,40 @@ fetch(fetchChannelSchedule)
     console.log(scheduleArray)
 
     scheduleArray.forEach((program) => {
-      console.log(program.title)
-      console.log(program.program.name)
-      console.log(program.starttimeutc)
 
-      //console.log(date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }))
+      let startTimeUtc = program.starttimeutc
+      //console.log(startTimeUtc)
+
+      let startTime = new Date(Number(startTimeUtc.match(/^\/Date\((\d+)\)\/$/)[1]))
+      const programStart = startTime.toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' })
+      console.log(programStart)
+
+      const programTitle = program.title
+      console.log(programTitle)
+      //console.log(program.program.name)
+
+      const programImage = program.imageurl
+
+
+
+      // Print information to DOM
+
+      displaySchedule.innerHTML +=
+        `
+        <div class="episode" id="episode">
+        <p>${programStart}</p>
+        <img src="${programImage}" alt="">
+        <p>${programTitle}</p>
+        </div>
+      `
+
     })
 
 
-
-
   })
+
+  //End tag for function to see todays schedule
+//}
+
+
+//seeChannelSchedule.addEventListener("onclick", () => seeTodaysSchedule())
