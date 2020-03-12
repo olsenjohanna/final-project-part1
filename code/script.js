@@ -17,51 +17,56 @@ const scheduleContainer = document.getElementById('scheduleContainer')
 const displaySchedule = document.getElementById('displaySchedule')
 
 
+// Function to show all channels (P1,P2,P3)
+const showChannels = () => {
 
-fetch(fetchAllChannels)
-  .then((response) => {
-    return response.json()
-  })
-  .then((channelArray) => {
+  // Fetch all channels
 
-    //Filter array to only show P1, P2 and P3
-    const filteredChannels = channelArray.channels.filter(item => item.id < 200)
-    console.log(filteredChannels)
+  fetch(fetchAllChannels)
+    .then((response) => {
+      return response.json()
+    })
+    .then((channelArray) => {
 
-
-    filteredChannels.forEach((channel) => {
-
-      let channelId = channel.id
-      const description = channel.tagline
-      const image = channel.image
-      const audio = channel.liveaudio.url
-      console.log(channel.color)
+      //Filter array to only show P1, P2 and P3
+      const filteredChannels = channelArray.channels.filter(item => item.id < 200)
+      console.log(filteredChannels)
 
 
-      // Print information to DOM
-      channelInfo.innerHTML +=
-        `
+      filteredChannels.forEach((channel) => {
+
+        let channelId = channel.id
+        const description = channel.tagline
+        const image = channel.image
+        const audio = channel.liveaudio.url
+        console.log(channel.color)
+
+
+        // Print information to DOM
+        channelInfo.innerHTML +=
+          `
         <div class="channel-image" id="channelImg">
         <img src="${image}" alt="">
         </div>
         `
 
+        // API URL to fetch program that sends right now for each channel
+        const fetchProgramRightNow = `https://api.sr.se/api/v2/scheduledepisodes/rightnow?format=json&channelid=${channelId}`
 
 
-
-      // Fetch program that sends right now for each channel
-      const fetchProgramRightNow = `https://api.sr.se/api/v2/scheduledepisodes/rightnow?format=json&channelid=${channelId}`
-
-      const sendRightNow = (channelId) => {
         fetch(fetchProgramRightNow)
           .then((response) => {
             return response.json()
           })
           .then((rightNowArray) => {
-            //console.log(rightNowArray)
+            console.log(rightNowArray)
 
             const titleNow = rightNowArray.channel.currentscheduledepisode.title
             const descrNow = rightNowArray.channel.currentscheduledepisode.description
+            const colorClass = rightNowArray.channel.name
+            console.log(channelId)
+
+            //Print information to DOM about program that plays now and button to see whole schedule
 
             scheduleInfo.innerHTML +=
               `<div class="container">
@@ -70,84 +75,109 @@ fetch(fetchAllChannels)
               <audio src="${audio}" controls></audio></p>
               </div>
               <div class="channel-schedule" id="channelSchedule">
-              <a href="" id="seeChannelSchedule" value=${channelId}>Se tablå >></a>
+              <button id="seeChannelSchedule" class="${colorClass}" value=${channelId}>Se tablå >></button>
               </div>
               </div>
               `
-            //channelAudio.innerHTML += `<audio src="${audio}" controls></audio>`
 
+            // End tag for fetch of fetchProgramRightNow
           })
-      }
-
-      sendRightNow()
-
-      //End tag filteredChannels.forEach
-    });
-
-    // End tag fetchAllChannels
-  })
 
 
-// Function for get program schedule 
+        //End tag filteredChannels.forEach
+      });
 
-// Get program schedule for different dates
+      // End tag fetchAllChannels
+    })
 
-// Get todays date
-
-
-
-const today = new Date()
-const month = today.getMonth() + 1
-const day = today.getDate()
-const yyyy = today.getFullYear()
-console.log(today)
-
-console.log(yyyy)
-
-
-if (month < 10) {
-  const mm = '0' + month
-  console.log(mm)
 }
 
-if (day < 10) {
-  const dd = '0' + day
-  console.log(dd)
+//Invoke function to show all channels
+showChannels()
+
+
+// Get dates for today, tomorrow and the second next day in format yyyy-mm-dd
+const getDates = () => {
+
+  //Todays date
+  const today = new Date()
+  const month = today.getMonth() + 1
+  const day = today.getDate()
+  const yyyy = today.getFullYear()
+
+  let mm = month
+  let dd = day
+
+  if (month < 10) {
+    mm = '0' + month
+  }
+
+  if (day < 10) {
+    dd = '0' + day
+  }
+
+  const todaysDate = `${yyyy}-${mm}-${dd}`
+  console.log(todaysDate)
+
+  //Tomorrows date 
+  const tomorrow = new Date(today)
+  tomorrow.setDate(today.getDate() + 1)
+
+  const tomorrowYear = tomorrow.getFullYear()
+  const tomorrowMonth = tomorrow.getMonth() + 1
+  const tomorrowDay = tomorrow.getDate()
+
+  let tmm = tomorrowMonth
+  let tdd = tomorrowDay
+
+  if (tomorrowMonth < 10) {
+    tmm = '0' + tomorrowMonth
+  }
+
+  if (tomorrowDay < 10) {
+    tdd = '0' + tomorrowDay
+  }
+
+  const tomorrowsDate = `${tomorrowYear}-${tmm}-${tdd}`
+  console.log(tomorrowsDate)
+
+  //Second next days date
+  const secondNext = new Date(tomorrow)
+  secondNext.setDate(tomorrow.getDate() + 1)
+
+  const weekdayLong = secondNext.toLocaleDateString('sv-SE', { weekday: 'long' })
+  console.log(weekdayLong)
+
+  const secondNextYear = secondNext.getFullYear()
+  const secondNextMonth = secondNext.getMonth() + 1
+  const secondNextDay = secondNext.getDate()
+
+  let smm = secondNextMonth
+  let sdd = secondNextDay
+
+  if (secondNextMonth < 10) {
+    smm = '0' + secondNextMonth
+  }
+
+  if (secondNextDay < 10) {
+    sdd = '0' + secondNextDay
+  }
+
+  const secondNextDate = `${secondNextYear}-${smm}-${sdd}`
+  console.log(secondNextDate)
+
 }
 
-//const todaysDate = `${yyyy}-${mm}-${dd}`
-//console.log(todaysDate)
+getDates()
 
 
+//Function for todays schedule for selected channel
 
-// Get tomorrows date
-const tomorrow = new Date(today)
-tomorrow.setDate(today.getDate() + 1)
-console.log(tomorrow)
-
-const tomorrowDay = tomorrow.getDate()
-const tomorrowMonth = tomorrow.getMonth() + 1
-const tomorrowyyyy = tomorrow.getFullYear()
-console.log(tomorrowDay)
-console.log(tomorrowMonth)
-console.log(tomorrowyyyy)
-
-// Get date for second next day
-const secondNextDay = new Date(tomorrow)
-secondNextDay.setDate(tomorrow.getDate() + 1)
-console.log(secondNextDay)
-
-
-
-//Function for todays schedule
-
-//const seeTodaysSchedule = () => {
-
+//const seeTodaysSchedule = (channel) => {
 
 // API url for 
 const fetchChannelSchedule = `http://api.sr.se/api/v2/scheduledepisodes?format=json&channelid=132`
-// http://api.sr.se/api/v2/scheduledepisodes?format=json&channelid=${channelId}&date=${today}
-
+//const fetchChannelSchedule = `http://api.sr.se/api/v2/scheduledepisodes?format=json&channelid=${channel}`
 
 fetch(fetchChannelSchedule)
   .then((response) => {
@@ -173,26 +203,26 @@ fetch(fetchChannelSchedule)
 
       const programImage = program.imageurl
 
-
-
       // Print information to DOM
 
       displaySchedule.innerHTML +=
         `
-        <div class="episode" id="episode">
-        <p>${programStart}</p>
-        <img src="${programImage}" alt="">
-        <p>${programTitle}</p>
-        </div>
-      `
-
+            <div class="episode" id="episode">
+            <p>${programStart}</p>
+            <img src="${programImage}" alt="">
+            <p>${programTitle}</p>
+            </div>
+            `
+      // End tag for each scheduleArray
     })
 
-
+    //End tag fetch
   })
 
   //End tag for function to see todays schedule
 //}
 
+  //Call for function to see todays schedule
 
-//seeChannelSchedule.addEventListener("onclick", () => seeTodaysSchedule())
+  //seeChannelSchedule.addEventListener("onclick", () => seeTodaysSchedule(seeChannelSchedule.value))
+
