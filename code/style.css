@@ -137,8 +137,6 @@ body {
 }
 
 
-
-
 .schedule-container {
   background-color: #F3F3F3;
   box-shadow: -1px 0px 18px 0px rgba(0,0,0,0.73);
@@ -179,12 +177,13 @@ body {
   background-color: #ccc;
 }
 
+
 .episode {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   height: 50px;
-  padding: 10px;
+  padding: 20px;
 }
 
 .episode p {
@@ -196,7 +195,13 @@ body {
   object-fit: cover;
   height: 30px;
   width: 30px;
-  margin-right: 10px;
+  margin-right: 30px;
+  margin-left: 30px;
+  align-self: center;
+}
+
+.program-description {
+  display:none;
 }
 
 
@@ -253,6 +258,30 @@ footer {
     justify-content: space-around;
     width: 200px;
   }
+
+  .heading-schedule {
+  font-size: xx-large;
+  }
+
+  .episode {
+    padding: 20px;
+    font-size: x-large;
+  }
+
+  .program-title {
+    width: 200px;
+  }
+  
+  .program-description {
+    display: inline;
+    
+  }
+
+  .episode img {
+    height: 50px;
+    width: 50px;
+  }
+  
 
 
 

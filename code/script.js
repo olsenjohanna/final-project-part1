@@ -12,92 +12,212 @@ const channelSchedule = document.getElementById('channelSchedule')
 const seeChannelSchedule = document.getElementById('seeChannelSchedule')
 
 
-// DOM Selectors schedule for specific channel
+// DOM Selectors for schedule for a specific channel
 const scheduleContainer = document.getElementById('scheduleContainer')
 const displaySchedule = document.getElementById('displaySchedule')
 
-
-// Function to show all channels (P1,P2,P3)
-const showChannels = () => {
-
-  // Fetch all channels
-
-  fetch(fetchAllChannels)
-    .then((response) => {
-      return response.json()
-    })
-    .then((channelArray) => {
-
-      //Filter array to only show P1, P2 and P3
-      const filteredChannels = channelArray.channels.filter(item => item.id < 200)
-      console.log(filteredChannels)
+document.getElementById("scheduleContainer").classList.remove('schedule-container')
 
 
-      filteredChannels.forEach((channel) => {
+// Fetch all channels
 
-        let channelId = channel.id
-        const description = channel.tagline
-        const image = channel.image
-        const audio = channel.liveaudio.url
-        console.log(channel.color)
+fetch(fetchAllChannels)
+  .then((response) => {
+    return response.json()
+  })
+  .then((channelArray) => {
+
+    console.log(channelArray)
+
+    //Filter array to only show P1, P2 and P3
+    const filteredChannels = channelArray.channels.filter(item => item.id === 132 || item.id === 163 || item.id === 164)
+    console.log(filteredChannels)
 
 
-        // Print information to DOM
-        channelInfo.innerHTML +=
-          `
+    filteredChannels.forEach((channel) => {
+
+      let channelId = channel.id
+      const description = channel.tagline
+      const image = channel.image
+      const audio = channel.liveaudio.url
+      const channelName = channel.name
+
+
+      // Print information to DOM
+      channelInfo.innerHTML +=
+        `
         <div class="channel-image" id="channelImg">
-        <img src="${image}" alt="">
+        <img src="${image}" alt="Logo for radio channel">
         </div>
         `
 
-        // API URL to fetch program that sends right now for each channel
-        const fetchProgramRightNow = `https://api.sr.se/api/v2/scheduledepisodes/rightnow?format=json&channelid=${channelId}`
+      // API URL to fetch program that sends right now for each channel
+      const fetchProgramRightNow = `https://api.sr.se/api/v2/scheduledepisodes/rightnow?format=json&channelid=${channelId}`
 
 
-        fetch(fetchProgramRightNow)
-          .then((response) => {
-            return response.json()
-          })
-          .then((rightNowArray) => {
-            console.log(rightNowArray)
+      fetch(fetchProgramRightNow)
+        .then((response) => {
+          return response.json()
+        })
+        .then((rightNowArray) => {
 
-            const titleNow = rightNowArray.channel.currentscheduledepisode.title
-            const descrNow = rightNowArray.channel.currentscheduledepisode.description
-            const colorClass = rightNowArray.channel.name
-            console.log(channelId)
+          console.log(rightNowArray)
+          console.log(channelName)
+          console.log(channelId)
 
-            //Print information to DOM about program that plays now and button to see whole schedule
+          const titleNow = rightNowArray.channel.currentscheduledepisode.title
+          const descrNow = rightNowArray.channel.currentscheduledepisode.description
 
-            scheduleInfo.innerHTML +=
-              `<div class="container">
+          //Print information to DOM about program that plays now and button to see whole schedule
+
+          scheduleInfo.innerHTML +=
+            `<div class="container">
               <div class="channel-program-now" id="channelProgramNow">
               <p>Spelas nu: ${titleNow} <br>
               <audio src="${audio}" controls></audio></p>
               </div>
               <div class="channel-schedule" id="channelSchedule">
-              <button id="seeChannelSchedule" class="${colorClass}" value=${channelId}>Se tablå >></button>
+              <button id="${channelName}" class="${channelName}">Se tablå ${channelName} >></button>
               </div>
               </div>
               `
 
-            // End tag for fetch of fetchProgramRightNow
-          })
+          // Function to see specific channel schedule when button is clicked
+          const getTodaysChannelSchedule = (channel) => {
+
+            const UrlTodaysSchedule = `http://api.sr.se/api/v2/scheduledepisodes?format=json&channelid=${channel}`
+
+            fetch(UrlTodaysSchedule)
+              .then((response) => {
+                return response.json()
+              })
+              .then((todaysSchedule) => {
+
+                console.log(channelName)
+                console.log(channelId)
+
+                const todaysScheduleArray = todaysSchedule.schedule
+                console.log(todaysScheduleArray)
+
+                document.getElementById("scheduleContainer").classList.add("schedule-container")
 
 
-        //End tag filteredChannels.forEach
-      });
+                // forEach to get values for each episode
+                todaysScheduleArray.forEach((program) => {
 
-      // End tag fetchAllChannels
-    })
+                  //Transform start time from string to hours and minutes
+                  const startTimeUtc = program.starttimeutc
+                  const startTime = new Date(Number(startTimeUtc.match(/^\/Date\((\d+)\)\/$/)[1]))
+                  const programStart = startTime.toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' })
 
-}
+                  const programTitle = program.title
+                  const programImage = program.imageurl
+                  const programDescription = program.description
 
-//Invoke function to show all channels
-showChannels()
+                  //Change information in DOM
+                  document.getElementById('headingSchedule').innerHTML = `Radio tablå kanal ${program.channel.name}`
+                  //document.getElementById('secondNextDay').innerHTML = `${getDates('daySecondNext')}`
+
+                  document.getElementById('tab').innerHTML =
+                    `
+                  <button>Idag</button>
+                  <button id="tomorrowButton">Imorgon</button>
+                  <button class="second-next-day" id="secondNextDay">${getDates('daySecondNext')}</button>
+                  `
+
+                  // Print information to DOM
+                  displaySchedule.innerHTML +=
+                    `
+                    <div class="episode" id="episode">
+                    <p>${programStart}</p>
+                    <img src="${programImage}" alt="">
+                    <p class="program-title">${programTitle}</p>
+                    <p class="program-description">${programDescription}</p>
+                    </div>
+                    `
+                  // End tag for each scheduleArray
+                })
+
+                //End tag fetch UrlTodaysSchedule
+              })
+
+
+
+            //End tag function getTodaysChannelSchedule
+          }
+
+
+          //Invoke function when clicking button
+          document.getElementById(`${channelName}`).addEventListener("click", () => getTodaysChannelSchedule(channelId))
+
+          // Function to see specific channel schedule for tomorrow when button is clicked
+          const getTomorrowsChannelSchedule = (channel) => {
+
+            console.log('getTomorrowsChannelSchedule')
+
+            const urlTomorrowsSchedule = `http://api.sr.se/api/v2/scheduledepisodes?format=json&channelid=164&date=2020-03-14`
+            //const urlTomorrowsSchedule = `http://api.sr.se/api/v2/scheduledepisodes?format=json&channelid=${channelId}&date=${getDates('dateTomorrow')}`
+
+            fetch(urlTomorrowsSchedule)
+              .then((response) => {
+                return response.json()
+              })
+              .then((tomorrowsSchedule) => {
+
+                console.log('urlTomorrowsSchedule')
+                console.log(channelName)
+                console.log(channelId)
+
+                const tomorrowsScheduleArray = tomorrowsSchedule.schedule
+
+                // forEach to get values for each episode
+                tomorrowsScheduleArray.forEach((program) => {
+
+                  //Transform start time from string to hours and minutes
+                  const tomorrowStartTimeUtc = program.starttimeutc
+                  const tomorrowStartTime = new Date(Number(startTimeUtc.match(/^\/Date\((\d+)\)\/$/)[1]))
+                  const tomorrowProgramStart = startTime.toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' })
+
+                  const tomorrowProgramTitle = program.title
+                  const tomorrowProgramImage = program.imageurl
+
+                  // Print information to DOM
+                  displaySchedule.innerHTML +=
+                    `
+                    <div class="episode" id="episode">
+                    <p>${tomorrowProgramStart}</p>
+                    <img src="${tomorrowProgramImage}" alt="">
+                    <p>${tomorrowProgramTitle}</p>
+                    </div>
+                    `
+                  // End tag for each tomorrowsScheduleArray
+                })
+
+                //End tag fetch urlTomorrowsSchedule
+              })
+
+            //End tag function getTomorrowsChannelSchedule
+          }
+
+
+          //Invoke function when clicking button
+          document.getElementById('tomorrowButton').addEventListener("click", () => getTomorrowsChannelSchedule(channelId))
+
+          // End tag for fetch of fetchProgramRightNow
+        })
+
+
+      //End tag filteredChannels.forEach
+    });
+
+    // End tag fetchAllChannels
+  })
+
+
 
 
 // Get dates for today, tomorrow and the second next day in format yyyy-mm-dd
-const getDates = () => {
+const getDates = (dag) => {
 
   //Todays date
   const today = new Date()
@@ -117,7 +237,6 @@ const getDates = () => {
   }
 
   const todaysDate = `${yyyy}-${mm}-${dd}`
-  console.log(todaysDate)
 
   //Tomorrows date 
   const tomorrow = new Date(today)
@@ -139,14 +258,12 @@ const getDates = () => {
   }
 
   const tomorrowsDate = `${tomorrowYear}-${tmm}-${tdd}`
-  console.log(tomorrowsDate)
 
   //Second next days date
   const secondNext = new Date(tomorrow)
   secondNext.setDate(tomorrow.getDate() + 1)
 
   const weekdayLong = secondNext.toLocaleDateString('sv-SE', { weekday: 'long' })
-  console.log(weekdayLong)
 
   const secondNextYear = secondNext.getFullYear()
   const secondNextMonth = secondNext.getMonth() + 1
@@ -164,65 +281,86 @@ const getDates = () => {
   }
 
   const secondNextDate = `${secondNextYear}-${smm}-${sdd}`
-  console.log(secondNextDate)
+
+  if (dag === 'dateToday') {
+    return todaysDate
+  } else if (dag === 'dateTomorrow') {
+    return tomorrowsDate
+  } else if (dag === 'dateSecondNext') {
+    return secondNextDate
+  } else if (dag === 'daySecondNext')
+    return weekdayLong.charAt(0).toUpperCase() + weekdayLong.slice(1)
 
 }
 
-getDates()
+console.log(getDates('dateToday'))
+console.log(getDates('dateTomorrow'))
+console.log(getDates('dateSecondNext'))
+console.log(getDates('daySecondNext'))
 
 
-//Function for todays schedule for selected channel
 
-//const seeTodaysSchedule = (channel) => {
+/*
 
-// API url for 
-const fetchChannelSchedule = `http://api.sr.se/api/v2/scheduledepisodes?format=json&channelid=132`
-//const fetchChannelSchedule = `http://api.sr.se/api/v2/scheduledepisodes?format=json&channelid=${channel}`
+// Function to see specific channel schedule for tomorrow when button is clicked
+          const getTomorrowsChannelSchedule = (channel) => {
 
-fetch(fetchChannelSchedule)
-  .then((response) => {
-    return response.json()
-  })
-  .then((schedules) => {
+            console.log('getTomorrowsChannelSchedule')
 
-    const scheduleArray = schedules.schedule
-    console.log(scheduleArray)
+            const urlTomorrowsSchedule = `http://api.sr.se/api/v2/scheduledepisodes?format=json&channelid=164&date=2020-03-14`
+            //const urlTomorrowsSchedule = `http://api.sr.se/api/v2/scheduledepisodes?format=json&channelid=${channelId}&date=${getDates('dateTomorrow')}`
 
-    scheduleArray.forEach((program) => {
+            fetch(urlTomorrowsSchedule)
+              .then((response) => {
+                return response.json()
+              })
+              .then((tomorrowsSchedule) => {
 
-      let startTimeUtc = program.starttimeutc
-      //console.log(startTimeUtc)
+                console.log('urlTomorrowsSchedule')
+                console.log(channelName)
+                console.log(channelId)
 
-      let startTime = new Date(Number(startTimeUtc.match(/^\/Date\((\d+)\)\/$/)[1]))
-      const programStart = startTime.toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' })
-      console.log(programStart)
+                const tomorrowsScheduleArray = tomorrowsSchedule.schedule
 
-      const programTitle = program.title
-      console.log(programTitle)
-      //console.log(program.program.name)
+                // forEach to get values for each episode
+                tomorrowsScheduleArray.forEach((program) => {
 
-      const programImage = program.imageurl
+                  //Transform start time from string to hours and minutes
+                  const tomorrowStartTimeUtc = program.starttimeutc
+                  const tomorrowStartTime = new Date(Number(startTimeUtc.match(/^\/Date\((\d+)\)\/$/)[1]))
+                  const tomorrowProgramStart = startTime.toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' })
 
-      // Print information to DOM
+                  const tomorrowProgramTitle = program.title
+                  const tomorrowProgramImage = program.imageurl
 
-      displaySchedule.innerHTML +=
-        `
-            <div class="episode" id="episode">
-            <p>${programStart}</p>
-            <img src="${programImage}" alt="">
-            <p>${programTitle}</p>
-            </div>
-            `
-      // End tag for each scheduleArray
-    })
+                  // Print information to DOM
+                  displaySchedule.innerHTML +=
+                    `
+                    <div class="episode" id="episode">
+                    <p>${tomorrowProgramStart}</p>
+                    <img src="${tomorrowProgramImage}" alt="">
+                    <p>${tomorrowProgramTitle}</p>
+                    </div>
+                    `
+                  // End tag for each tomorrowsScheduleArray
+                })
 
-    //End tag fetch
-  })
+                //End tag fetch urlTomorrowsSchedule
+              })
 
-  //End tag for function to see todays schedule
-//}
+            //End tag function getTomorrowsChannelSchedule
+          }
 
-  //Call for function to see todays schedule
 
-  //seeChannelSchedule.addEventListener("onclick", () => seeTodaysSchedule(seeChannelSchedule.value))
+          //Invoke function when clicking button
+          document.getElementById(`tomorrowButton`).addEventListener("click", () => getTomorrowsChannelSchedule(channelId))
+
+          */
+
+
+
+
+
+
+
 
