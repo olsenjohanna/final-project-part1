@@ -7,10 +7,9 @@
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <!-- ICON NEEDS FONT AWESOME FOR CHEVRON UP ICON -->
   <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-  <title>Final Project</title>
+  <title>Johannas Final Project</title>
 </head>
 
 <body>
@@ -20,17 +19,20 @@
 
   <header>
     <img src="assets/logo_sverigesradio.png" alt="Logo Sveriges Radio">
-    <button id="tomorrowButton">Test</button>
-    <div class="hamburger">
-      <div></div>
-      <div></div>
-      <div></div>
-    </div>
-    <div class="navbar">
-      <div class="menu">
-        <a href="">Nyheter</a>
-        <a href="">Poddar & Program</a>
-        <a href="">Min sida</a>
+    <button id="tomorrowButton">Test tmrw</button>
+    <button id="secondNextDayButton">Test secondday</button>
+    <nav class="navbar">
+      <div class="hamburger" id="hamburger">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <div id="menu" class="menu">
+        <ul>
+          <li><a href="https://sverigesradio.se/">Nyheter</a></li>
+          <li><a href="https://sverigesradio.se/program">Poddar & Program</a></li>
+          <li><a href="https://sverigesradio.se/minlista">Min sida</a></li>
+        </ul>
       </div>
       <div class="search-container">
         <form action="/action_page.php">
@@ -38,7 +40,7 @@
           <button type="submit"><i class="fa fa-search"></i></button>
         </form>
       </div>
-    </div>
+    </nav>
   </header>
 
   <section class="channel-container" id="channelContainer">
