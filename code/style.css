@@ -53,8 +53,7 @@ header img {
 }
 
 .menu {
-  display: none;
-  
+  display: none;  
 }
 
 .menu li {
@@ -100,59 +99,61 @@ header img {
   margin-left: 20px;
   margin-right: 20px;
   margin-bottom: 20px;
-  padding: 20px;
+  padding: 20px 10px;
 }
 
 .channel-info {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  width: auto;
 }
-
 
 .channel-image img {
   object-fit: cover;
-  height: 120px;
-  width: 120px;
-  padding: 10px;
+  height: 110px;
+  width: 110px;
 }
 
-
 .schedule-info {
-  width: 50%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  margin-left: 30px;
+  margin-left: 10px;
+  height: 100%;
+  width: 60%;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 
 .channel-program-now {
   display: flex;
   flex-direction: column;
-  width: 100%;
   justify-content: space-around;
-  padding: 10px;
+  padding: 5px;
 }
 
 .channel-program-now p {
   margin-bottom: 0;
+  font-size: 12px;
 }
 
-
 .channel-program-now audio { 
-  width: 150px;
+  width: 140px;
   margin-top: 10px;
   height: 30px; 
   box-shadow: 5px 5px 20px rgba(0,0, 0, 0.4);
   border-radius: 90px;
   transform: scale(1.05);
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .channel-schedule {
-  margin-bottom: 20px;
+  padding: 10px;
 }
 
 /* Styling for buttons for "tablå" */
@@ -164,7 +165,7 @@ header img {
 	border-radius: 6px;
 	border: 1px solid #dcdcdc;
 	cursor: pointer;
-	font-size: 15px;
+	font-size: 12px;
 	font-weight: bold;
 	padding: 6px 20px;
 	text-decoration: none;
@@ -282,8 +283,32 @@ footer {
     font-size: 20px;
   }
 
+  .schedule-info {
+    width: 65%;
+  }
+  
+  .channel-program-now p {
+    margin-bottom: 0;
+    font-size: 18px;
+  }
+  
+  .channel-program-now audio { 
+    width: 180px;
+    margin-top: 15px;
+    height: 40px; 
+  }
+  
+
   .channel-schedule button {
   font-size: 20px;
+  }
+
+  .P1  {
+    margin-bottom: 20px;
+  }
+
+  .P2  {
+    margin-bottom: 20px;
   }
 
   .heading-schedule {
@@ -420,6 +445,15 @@ footer {
     margin-bottom: 20px;
   }
 
+  .channel-program-now p {
+    font-size: 25px;
+   text-align: center;
+  }
+
+  .channel-program-now audio { 
+    width: 200px;
+  }
+
   .channel-schedule {
     display: flex;
     flex-direction: row;
@@ -430,6 +464,14 @@ footer {
 
   .channel-schedule button {
     font-size: 25px;
+  }
+
+  .P1  {
+    margin-bottom: 0;
+  }
+
+  .P2  {
+    margin-bottom: 0;
   }
 
   .heading-schedule {
