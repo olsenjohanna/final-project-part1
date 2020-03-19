@@ -191,7 +191,7 @@ const renderChannelScheduleInfo = channel => {
 
 // Function to see specific channel schedule when button is clicked
 const getTodaysChannelSchedule = channelId => {
-  const UrlTodaysSchedule = `http://api.sr.se/api/v2/scheduledepisodes?format=json&channelid=${channelId}`
+  const UrlTodaysSchedule = `https://api.sr.se/api/v2/scheduledepisodes?format=json&channelid=${channelId}`
 
   fetch(UrlTodaysSchedule)
     .then(response => {
@@ -276,7 +276,7 @@ const getTodaysChannelSchedule = channelId => {
 // Function to see specific channel schedule for tomorrow when button is clicked
 const getTomorrowsChannelSchedule = (channel) => {
 
-  const urlTomorrowsSchedule = `http://api.sr.se/api/v2/scheduledepisodes?format=json&channelid=${channel}&date=${getDates('dateTomorrow')}`
+  const urlTomorrowsSchedule = `https://api.sr.se/api/v2/scheduledepisodes?format=json&channelid=${channel}&date=${getDates('dateTomorrow')}`
 
   fetch(urlTomorrowsSchedule)
     .then((response) => {
@@ -339,7 +339,7 @@ const getTomorrowsChannelSchedule = (channel) => {
 // Function for get channel schedule for second next day
 const getSecondNextDayChannelSchedule = (channel) => {
 
-  const urlSecondNextDaySchedule = `http://api.sr.se/api/v2/scheduledepisodes?format=json&channelid=${channel}&date=${getDates('dateSecondNext')}`
+  const urlSecondNextDaySchedule = `https://api.sr.se/api/v2/scheduledepisodes?format=json&channelid=${channel}&date=${getDates('dateSecondNext')}`
 
   fetch(urlSecondNextDaySchedule)
     .then((response) => {
