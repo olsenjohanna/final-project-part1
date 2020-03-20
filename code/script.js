@@ -181,7 +181,7 @@ const renderChannelScheduleInfo = channel => {
           <audio src="${liveaudio.url}" controls></audio>
           </div>
           <div class="channel-schedule" id="channelSchedule-${id}">
-          <button id="${name}" class="${name}">Se tablå ${name} >></button>
+          <a href="#scheduleContainer"><button id="${name}" class="${name}">Se tablå ${name} >></button></a>
           </div>
         </div>
       `

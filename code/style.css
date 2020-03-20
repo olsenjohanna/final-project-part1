@@ -1,8 +1,3 @@
-body {
-  margin: 0;
-  font-family: 'Source Sans Pro', sans-serif;
-}
-
 /*Return to top icon*/
 
 #btnScrollToTop {
@@ -22,6 +17,14 @@ body {
 
 #btnScrollToTop:hover {
 opacity: 0.8;
+}
+
+
+/* Styling page */
+
+body {
+  margin: 0;
+  font-family: 'Source Sans Pro', sans-serif;
 }
 
 header {
@@ -89,7 +92,6 @@ header img {
   display: none;
 }
 
-
 .channel-container {
   display: flex;
   flex-direction: row;
@@ -128,7 +130,6 @@ header img {
   flex-direction: column;
   justify-content: space-between;
 }
-
 
 .channel-program-now {
   display: flex;
@@ -265,6 +266,8 @@ footer {
   text-align: center;
   font-size: 10px;
 }
+
+
 /* MEDIA QUERIES TABLET */
 
 @media (min-width: 667px) { 
@@ -512,5 +515,5 @@ footer {
     width: 60px;
   }
   
-
+ /*End tag media query desktop*/
 }
